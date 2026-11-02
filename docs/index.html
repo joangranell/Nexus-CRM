@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus CRM · Plataforma Comercial B2B & Motor de Estados</title>
+  <meta name="description" content="Plataforma comercial B2B con máquina de estados estricta, jerarquía mayorista (Distribuidor vs. Cliente Final), integración ERP, importador masivo en 4 etapas y arquitectura de IA BYOK.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f8fafc;
+      --border: #e2e8f0;
+      --border-accent: rgba(2, 132, 199, 0.35);
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --primary-light: #0284c7;
+      --primary-bg: #e0f2fe;
+      --accent: #4f46e5;
+      --accent-light: #4338ca;
+      --accent-bg: #e0e7ff;
+      --emerald: #059669;
+      --emerald-bg: #d1fae5;
+      --amber: #d97706;
+      --amber-bg: #fef3c7;
+      --rose: #e11d48;
+      --rose-bg: #ffe4e6;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --text-subtle: #64748b;
+      --card-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+      --card-shadow-hover: 0 12px 28px -4px rgba(15, 23, 42, 0.1), 0 4px 10px -2px rgba(15, 23, 42, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Ambient background glows for Light Mode */
+    .glow-top {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1000px;
+      height: 550px;
+      background: radial-gradient(50% 50% at 50% 0%, rgba(2, 132, 199, 0.12) 0%, rgba(99, 102, 241, 0.05) 60%, transparent 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Header Nav */
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    }
+
+    .nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      height: 72px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #0284c7, #4f46e5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 15px;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+    }
+
+    .brand-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .brand-tag {
+      font-size: 0.65rem;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: var(--primary-bg);
+      border: 1px solid #bae6fd;
+      color: var(--primary);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    nav.main-nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    nav.main-nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    nav.main-nav a:hover {
+      color: var(--primary);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: #ffffff;
+      border: 1px solid transparent;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);
+      background: linear-gradient(135deg, #0369a1, #1d4ed8);
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      color: var(--text);
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-secondary:hover {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+      color: var(--primary);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Hero Section */
+    section.hero {
+      padding: 80px 0 60px;
+      text-align: center;
+    }
+
+    .eyebrow-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: #ffffff;
+      border: 1px solid #bae6fd;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.08);
+    }
+
+    .hero-title {
+      font-size: clamp(2.3rem, 5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      max-width: 980px;
+      margin: 0 auto 20px;
+      color: #0f172a;
+    }
+
+    .hero-title span.gradient-text {
+      background: linear-gradient(135deg, #0284c7 20%, #4f46e5 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 800px;
+      margin: 0 auto 36px;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+    }
+
+    /* Badges Bar */
+    .badges-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      flex-wrap: wrap;
+      padding: 16px 24px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      max-width: 820px;
+      margin: 0 auto 50px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+
+    .badge-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .badge-item strong {
+      color: var(--text);
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    /* Section Headers */
+    .section-header {
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto 48px;
+    }
+
+    .section-eyebrow {
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 14px;
+      line-height: 1.25;
+    }
+
+    .section-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Comparison Table Problem vs Solution */
+    .comparison-section {
+      margin-bottom: 80px;
+    }
+
+    .comp-table-wrapper {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow-x: auto;
+      box-shadow: var(--card-shadow);
+    }
+
+    table.comp-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.92rem;
+    }
+
+    table.comp-table th,
+    table.comp-table td {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    table.comp-table th {
+      background: #f8fafc;
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-subtle);
+    }
+
+    table.comp-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .col-problem {
+      color: #991b1b;
+      background: #fff5f5;
+      font-weight: 500;
+    }
+
+    .col-nexus {
+      color: #065f46;
+      background: #f0fdf4;
+      font-weight: 600;
+    }
+
+    /* Simulator Container */
+    .simulator-container {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 80px;
+    }
+
+    .sim-guide-callout {
+      background: #f0fdfa;
+      border: 1px solid #99f6e4;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .sim-guide-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .sim-guide-text h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0f766e;
+      margin-bottom: 4px;
+    }
+
+    .sim-guide-text p {
+      font-size: 0.85rem;
+      color: #115e59;
+      line-height: 1.5;
+    }
+
+    /* Pipeline Step Tracker */
+    .sim-pipeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .sim-pipeline {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .sim-step {
+      background: #f8fafc;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .sim-step.active {
+      background: #eff6ff;
+      border-color: #3b82f6;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    }
+
+    .sim-step.completed {
+      background: #f0fdf4;
+      border-color: #10b981;
+    }
+
+    .sim-step-num {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-subtle);
+      margin-bottom: 4px;
+    }
+
+    .sim-step.active .sim-step-num {
+      color: #2563eb;
+    }
+
+    .sim-step.completed .sim-step-num {
+      color: #059669;
+    }
+
+    .sim-step-name {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .sim-step-rule {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Sim Grid: Account Card & Interactive Actions */
+    .sim-interactive-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 992px) {
+      .sim-interactive-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .sim-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+    }
+
+    .sim-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sim-account-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .sim-fields-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sim-field {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      padding: 8px 12px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .sim-field label {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .sim-field span {
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .badge-sim {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
+    .badge-blue { background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; }
+    .badge-indigo { background: #e0e7ff; color: #4338ca; border: 1px solid #c7d2fe; }
+    .badge-amber { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+    .badge-emerald { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+
+    /* Action buttons in simulator */
+    .sim-actions-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-sim-action {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      padding: 12px 16px;
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-sim-action:hover {
+      background: #f0f9ff;
+      border-color: #38bdf8;
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.12);
+    }
+
+    .btn-sim-action span.action-desc {
+      font-size: 0.75rem;
+      color: var(--text-subtle);
+      font-weight: 500;
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* Terminal Console */
+    .sim-console-wrapper {
+      margin-top: 24px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #1e293b;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+    }
+
+    .console-header {
+      background: #1e293b;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #94a3b8;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .console-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .console-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .sim-console {
+      background: #0f172a;
+      padding: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: #34d399;
+      height: 190px;
+      overflow-y: auto;
+      line-height: 1.6;
+    }
+
+    .console-line {
+      margin-bottom: 8px;
+    }
+    .console-timestamp {
+      color: #64748b;
+    }
+    .console-event {
+      color: #38bdf8;
+      font-weight: 700;
+    }
+    .console-rule {
+      color: #fbbf24;
+      font-size: 0.73rem;
+    }
+
+    /* Hierarchy Cards (Distribuidor vs Cliente Final) */
+    .hierarchy-section {
+      margin-bottom: 80px;
+    }
+
+    .hierarchy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .hier-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: var(--card-shadow);
+    }
+
+    .hier-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .hier-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+
+    .hier-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .hier-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-bottom: 16px;
+    }
+
+    .hier-list {
+      list-style: none;
+      font-size: 0.85rem;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .hier-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .hier-list li::before {
+      content: "✓";
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    /* Features Grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 24px;
+      margin-bottom: 80px;
+    }
+
+    .feature-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--card-shadow-hover);
+      border-color: #93c5fd;
+    }
+
+    .feature-icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 18px;
+    }
+
+    .feature-title {
+      font-size: 1.18rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .feature-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* AI Showcase Tabs */
+    .ai-showcase-box {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 80px;
+    }
+
+    .ai-tabs-nav {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+
+    .ai-tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .ai-tab-btn.active {
+      background: var(--primary-bg);
+      border-color: #bae6fd;
+      color: var(--primary);
+    }
+
+    .ai-tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .ai-tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .ai-prompt-response-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .ai-prompt-response-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .code-snippet-box {
+      background: #0f172a;
+      border-radius: 10px;
+      padding: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: #e2e8f0;
+      line-height: 1.5;
+      overflow-x: auto;
+    }
+
+    /* FAQ Section */
+    .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 24px;
+      margin-bottom: 80px;
+    }
+
+    .faq-item {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: var(--card-shadow);
+    }
+
+    .faq-question {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .faq-answer {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    footer.site-footer {
+      background: #ffffff;
+      border-top: 1px solid var(--border);
+      padding: 60px 0 30px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .footer-col h4 {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-col a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .footer-col a:hover {
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="glow-top"></div>
+
+  <!-- Header Navigation -->
+  <header class="site-header">
+    <div class="nav-container">
+      <a href="#" class="brand-logo">
+        <div class="brand-icon">N</div>
+        <span class="brand-title">Nexus CRM</span>
+        <span class="brand-tag">v2.0 Pro</span>
+      </a>
+
+      <nav class="main-nav">
+        <a href="#problema">Por qué Nexus</a>
+        <a href="#simulador">Simulador en Vivo</a>
+        <a href="#jerarquia">Jerarquía Mayorista</a>
+        <a href="#modulos">Módulos Core</a>
+        <a href="#ia-byok">IA BYOK</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="https://github.com/joangranell/Nexus-CRM" target="_blank" class="btn btn-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          Repositorio
+        </a>
+        <a href="#simulador" class="btn btn-primary">
+          Probar Simulador
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="eyebrow-pill">
+          <span>⚡ MÁQUINA DE ESTADOS DETERMINISTA & CANAL INDIRECTO B2B</span>
+        </div>
+        <h1 class="hero-title">
+          El CRM B2B donde el <span class="gradient-text">Forecasting es Real</span> y las Reglas se Cumplen.
+        </h1>
+        <p class="hero-subtitle">
+          Diseñado para venta consultiva, suministros industriales y distribución mayorista. Cero oportunidades infladas: las cuentas avanzan solo ante contactos humanos efectivos, validación presupuestaria y pedidos reales sincronizados por el ERP.
+        </p>
+
+        <div class="hero-ctas">
+          <a href="#simulador" class="btn btn-primary" style="padding: 12px 28px; font-size: 1rem;">
+            🎮 Interactuar con el Simulador
+          </a>
+          <a href="#jerarquia" class="btn btn-secondary" style="padding: 12px 24px; font-size: 1rem;">
+            🏢 Conocer la Jerarquía de 2 Niveles
+          </a>
+        </div>
+
+        <div class="badges-bar">
+          <div class="badge-item">
+            <span class="badge-dot" style="background: #10b981;"></span>
+            <strong>25/25 Tests Passing</strong> (pytest)
+          </div>
+          <div class="badge-item">
+            <span class="badge-dot" style="background: #0284c7;"></span>
+            <strong>FastAPI & SQLAlchemy 2.0</strong>
+          </div>
+          <div class="badge-item">
+            <span class="badge-dot" style="background: #6366f1;"></span>
+            <strong>Vite + React 18 Tailwind</strong>
+          </div>
+          <div class="badge-item">
+            <span class="badge-dot" style="background: #f59e0b;"></span>
+            <strong>Arquitectura IA BYOK</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Problem vs Solution Comparison Table -->
+    <section id="problema" class="comparison-section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-eyebrow">Diagnóstico del Mercado</div>
+          <h2 class="section-title">¿Por qué fracasa el 70% de los CRM en entornos B2B?</h2>
+          <p class="section-subtitle">
+            Salesforce, HubSpot o Zoho están pensados para software SaaS o B2C transaccional. En distribución y venta industrial generan frustración comercial y directores comerciales a oscuras.
+          </p>
+        </div>
+
+        <div class="comp-table-wrapper">
+          <table class="comp-table">
+            <thead>
+              <tr>
+                <th style="width: 32%;">Desafío B2B</th>
+                <th style="width: 34%;">CRM Tradicional (Salesforce / HubSpot)</th>
+                <th style="width: 34%;">Nexus CRM (Solución Determinista)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Previsión de Ingresos (Forecast)</strong></td>
+                <td class="col-problem">Comerciales crean "Oportunidades" sin importe ni fecha de cierre solo para justificar actividad. El pipeline es pura ficción.</td>
+                <td class="col-nexus"><strong>Salvaguarda de Forecasting:</strong> Si no hay importe (€) y fecha prevista, se degrada a Prospecto. Solo entra en previsión con compromiso financiero.</td>
+              </tr>
+              <tr>
+                <td><strong>Cierre de Venta</strong></td>
+                <td class="col-problem">El comercial arrastra la tarjeta a "Ganado" cuando cree que vendió. No hay validación contable.</td>
+                <td class="col-nexus"><strong>Conversión Exclusiva por ERP:</strong> Una cuenta solo pasa a CLIENTE cuando el ERP confirma e ingesta su primer pedido real.</td>
+              </tr>
+              <tr>
+                <td><strong>Modelo de Canal Mayorista</strong></td>
+                <td class="col-problem">Confusión absoluta: no distingue quién consume el producto (restaurante/taller) de quién paga la factura (mayorista).</td>
+                <td class="col-nexus"><strong>Jerarquía Nativa de 2 Niveles:</strong> Distribuidor (Cliente Factura) vinculado obligatoriamente con sus Clientes Finales (Cliente Pedido).</td>
+              </tr>
+              <tr>
+                <td><strong>Marketing vs. Ventas</strong></td>
+                <td class="col-problem">Un clic en un newsletter promueve automáticamente el contacto a oportunidad, inflando costes y quemando al comercial.</td>
+                <td class="col-nexus"><strong>Puente de Alta Intención (🔥):</strong> Un clic en "Solicitar Tarifa" crea una Tarea Urgente en "Mi Día"; el estado solo avanza si el comercial contacta con éxito.</td>
+              </tr>
+              <tr>
+                <td><strong>Inteligencia Artificial</strong></td>
+                <td class="col-problem">Costes desorbitados de 30-50€/usuario/mes, obligatoriedad de usar su modelo cautivo y datos expuestos a terceros.</td>
+                <td class="col-nexus"><strong>Arquitectura IA BYOK:</strong> Trae tu propia clave de Azure, OpenAI, Gemini o Claude a coste directo de API (o usa Mock gratuito sin coste).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Simulator Section -->
+    <section id="simulador" style="margin-bottom: 80px;">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-eyebrow">Simulador Interactivo en Vivo</div>
+          <h2 class="section-title">Comprueba las Reglas de Oro en Tiempo Real</h2>
+          <p class="section-subtitle">
+            Experimenta cómo reacciona Nexus CRM ante cada acción comercial y evento del sistema. Pulsa los botones y observa el comportamiento de la máquina de estados.
+          </p>
+        </div>
+
+        <div class="simulator-container">
+          <div class="sim-guide-callout">
+            <span class="sim-guide-icon">💡</span>
+            <div class="sim-guide-text">
+              <h4>Guía Didáctica de la Demostración:</h4>
+              <p>
+                1º Pulsa <strong>"Llamada No Contesta"</strong> y comprueba cómo el Lead registra el intento sin avanzar de fase.<br/>
+                2º Pulsa <strong>"Contacto Humano Efectivo"</strong> para verificar la promoción automática a <em>Prospecto</em> y asignación de comercial.<br/>
+                3º Pulsa <strong>"Cuantificar Oportunidad"</strong> para ingresar al <em>Potencial</em> formal con importe para el forecast.<br/>
+                4º Pulsa <strong>"Simular Pedido ERP"</strong> para presenciar la regla de oro: la conversión automática a <em>Cliente</em> certificado.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step Progress Tracker -->
+          <div class="sim-pipeline">
+            <div id="node-lead" class="sim-step active">
+              <div class="sim-step-num">Fase 1</div>
+              <div class="sim-step-name">LEAD</div>
+              <div class="sim-step-rule">Bolsa Común sin asignar. Solo registra intentos de contacto.</div>
+            </div>
+            <div id="node-prospecto" class="sim-step">
+              <div class="sim-step-num">Fase 2</div>
+              <div class="sim-step-name">PROSPECTO</div>
+              <div class="sim-step-rule">Contacto efectivo cualificado. Se asigna comercial y tipología.</div>
+            </div>
+            <div id="node-potencial" class="sim-step">
+              <div class="sim-step-num">Fase 3</div>
+              <div class="sim-step-name">POTENCIAL</div>
+              <div class="sim-step-rule">Oportunidad valorada (€) y con fecha de cierre en forecast.</div>
+            </div>
+            <div id="node-cliente" class="sim-step">
+              <div class="sim-step-num">Fase 4</div>
+              <div class="sim-step-name">CLIENTE</div>
+              <div class="sim-step-rule">Validación contable definitiva mediante primer pedido en ERP.</div>
+            </div>
+          </div>
+
+          <!-- Interactive Grid -->
+          <div class="sim-interactive-grid">
+            <!-- Left: Live Account Card -->
+            <div class="sim-card">
+              <div class="sim-card-header">
+                <div>
+                  <div class="sim-account-title" id="card-company">Restaurante El Faro del Puerto</div>
+                  <div style="font-size: 0.78rem; color: var(--text-subtle); margin-top: 2px;">CIF: B98334455 · Canal Hostelería Valencia</div>
+                </div>
+                <span id="badge-stage" class="badge-sim badge-blue">LEAD</span>
+              </div>
+
+              <div class="sim-fields-list">
+                <div class="sim-field">
+                  <label>Sub-estado Actual:</label>
+                  <span id="field-substatus">SIN_CONTACTAR</span>
+                </div>
+                <div class="sim-field">
+                  <label>Tipología Comercial:</label>
+                  <span id="field-type" style="color: #0284c7;">Cliente Final (Canal Indirecto)</span>
+                </div>
+                <div class="sim-field">
+                  <label>Distribuidor Factura Asociado:</label>
+                  <span id="field-dist" style="color: #4f46e5;">Distribuciones Levante Mayorista S.A.</span>
+                </div>
+                <div class="sim-field">
+                  <label>Comercial Propietario:</label>
+                  <span id="field-owner" style="color: var(--text-subtle);">Bolsa Común (Sin Asignar)</span>
+                </div>
+                <div class="sim-field">
+                  <label>Pipeline Forecast (€):</label>
+                  <span id="field-opp" style="color: var(--text-subtle);">0.00 € (No cuantificada)</span>
+                </div>
+                <div class="sim-field">
+                  <label>Facturación Real en ERP:</label>
+                  <span id="field-erp" style="color: var(--text-subtle);">0.00 € (Sin pedidos firmes)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Interactive Actions Palette -->
+            <div>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                <span style="font-size: 0.82rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-subtle);">
+                  Acciones Comerciales & Eventos ERP
+                </span>
+                <button onclick="resetSimulation()" class="btn btn-secondary" style="padding: 4px 12px; font-size: 0.75rem;">
+                  ↺ Reiniciar Demo
+                </button>
+              </div>
+
+              <div class="sim-actions-grid">
+                <button class="btn-sim-action" onclick="actionCallNoAnswer()">
+                  <div>
+                    📞 Registrar Llamada No Contesta
+                    <span class="action-desc">Incrementa intento de contacto (1 o 2). No cambia de fase.</span>
+                  </div>
+                  <span>➔</span>
+                </button>
+
+                <button class="btn-sim-action" onclick="actionEffectiveContact()">
+                  <div>
+                    🤝 Registrar Contacto Efectivo Humano
+                    <span class="action-desc">Promoción determinista: Pasa a PROSPECTO y asigna Comercial.</span>
+                  </div>
+                  <span>➔</span>
+                </button>
+
+                <button class="btn-sim-action" onclick="actionHighIntentClick()">
+                  <div>
+                    🔥 Clic en "Solicitar Tarifa" (Mailing)
+                    <span class="action-desc">Puente Mkt-Ventas: Crea Tarea Urgente en Mi Día sin alterar el estado.</span>
+                  </div>
+                  <span>➔</span>
+                </button>
+
+                <button class="btn-sim-action" onclick="actionCreateOpportunity()">
+                  <div>
+                    💼 Cuantificar Oportunidad (22.000 €)
+                    <span class="action-desc">Avanza a POTENCIAL: Incorpora valor monetario al forecast financiero.</span>
+                  </div>
+                  <span>➔</span>
+                </button>
+
+                <button class="btn-sim-action" onclick="actionErpOrder()" style="border-color: #86efac; background: #f0fdf4;">
+                  <div>
+                    📦 Simular Webhook Pedido ERP (14.200 €)
+                    <span class="action-desc" style="color: #166534;">Conversión definitiva: Avanza formalmente a CLIENTE certificado.</span>
+                  </div>
+                  <span>➔</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Console Terminal -->
+          <div class="sim-console-wrapper">
+            <div class="console-header">
+              <div class="console-dots">
+                <div class="console-dot" style="background: #ef4444;"></div>
+                <div class="console-dot" style="background: #eab308;"></div>
+                <div class="console-dot" style="background: #22c55e;"></div>
+              </div>
+              <span>Nexus Kernel Audit Log · Engine Realtime Inspector</span>
+              <span>LIVE</span>
+            </div>
+            <div class="sim-console" id="sim-console">
+              <div class="console-line">
+                <span class="console-timestamp">[00:00:00]</span> 
+                <span class="console-event">SISTEMA INICIALIZADO:</span> Registro cargado como LEAD en Bolsa Común. Esperando interacción.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Two-Tier B2B Hierarchy Section -->
+    <section id="jerarquia" class="hierarchy-section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-eyebrow">Arquitectura Comercial B2B</div>
+          <h2 class="section-title">Jerarquía de 2 Niveles: Distribuidor vs. Cliente Final</h2>
+          <p class="section-subtitle">
+            En la distribución mayorista de suministros industriales, hostelería o bienes de equipo, quien realiza el pedido no siempre es quien abona la factura contable. Nexus CRM modela esta dualidad con rigurosa precisión.
+          </p>
+        </div>
+
+        <div class="hierarchy-grid">
+          <!-- Card 1: Distribuidor -->
+          <div class="hier-card" style="border-top: 4px solid #4f46e5;">
+            <div class="hier-card-header">
+              <span class="hier-badge" style="background: #e0e7ff; color: #4338ca;">Nivel Mayorista</span>
+              <span style="font-size: 20px;">🏢</span>
+            </div>
+            <h3 class="hier-title">DISTRIBUIDOR (Cliente Factura)</h3>
+            <p class="hier-desc">
+              Es el mayorista o central logística de compras que asume el riesgo crediticio, suscribe acuerdos comerciales y abona las facturas contables del ERP.
+            </p>
+            <ul class="hier-list">
+              <li>Dispone de CIF fiscal y código de cuenta principal en el ERP contable.</li>
+              <li>Agrupa bajo su cartera a su red de clientes finales vinculados.</li>
+              <li>Su ficha 360º consolida el volumen total facturado por todos sus puntos de venta.</li>
+              <li>Procesado en 1ª pasada durante la importación masiva.</li>
+            </ul>
+          </div>
+
+          <!-- Card 2: Cliente Final -->
+          <div class="hier-card" style="border-top: 4px solid #0284c7;">
+            <div class="hier-card-header">
+              <span class="hier-badge" style="background: #e0f2fe; color: #0284c7;">Punto de Consumo</span>
+              <span style="font-size: 20px;">🏪</span>
+            </div>
+            <h3 class="hier-title">CLIENTE FINAL (Cliente Pedido)</h3>
+            <p class="hier-desc">
+              Es el establecimiento, taller, restaurante, fábrica o filial donde se consume el producto y donde el comercial de zona realiza la visita técnica y prescripción.
+            </p>
+            <ul class="hier-list">
+              <li>Exige <strong>obligatoriamente</strong> un Distribuidor Asociado (<code style="font-family: monospace; font-size: 0.8rem; background: #e2e8f0; padding: 2px 4px; border-radius: 4px;">billing_account_id</code>).</li>
+              <li>Las oportunidades de venta y visitas comerciales se gestionan a su nivel directo.</li>
+              <li>Al recibir pedidos, el ERP los factura automáticamente a su distribuidor matriz.</li>
+              <li>Doble trazabilidad: consumo analítico local y facturación mayorista agrupada.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Callout ERP Traceability -->
+        <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 16px; padding: 24px; box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+          <div style="width: 52px; height: 52px; border-radius: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
+            📦
+          </div>
+          <div style="flex: 1; min-width: 280px;">
+            <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--text); margin-bottom: 4px;">
+              Trazabilidad Dual de Facturación en el ERP
+            </h4>
+            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+              Cuando el ERP registra un pedido emitido por un Cliente Final, la tabla intermedia <code style="font-family: monospace; background: #f1f5f9; padding: 2px 4px; border-radius: 4px;">erp_orders_cache</code> conserva tanto el identificador del punto de entrega como el del distribuidor facturador. La conversión automática a <strong>CLIENTE</strong> promueve a ambos con total coherencia fiscal.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Modules Section -->
+    <section id="modulos" style="margin-bottom: 80px;">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-eyebrow">Funcionalidades Integrales</div>
+          <h2 class="section-title">Ingeniería Robusta para Equipos Comerciales B2B</h2>
+          <p class="section-subtitle">
+            Cada módulo ha sido diseñado para resolver fricciones reales: desde la importación de datos sucios hasta la agenda diaria del comercial.
+          </p>
+        </div>
+
+        <div class="features-grid">
+          <!-- Feature 1 -->
+          <div class="feature-card">
+            <div class="feature-icon-box" style="background: #e0f2fe; color: #0284c7;">
+              📥
+            </div>
+            <h3 class="feature-title">Importador Masivo en 4 Etapas</h3>
+            <p class="feature-desc">
+              Carga segura en staging con normalización automática de teléfonos al estándar internacional E.164, limpieza de CIFs, deduplicación difusa (>88% similitud) y salvaguarda que degrada potenciales sin importe para proteger el pipeline.
+            </p>
+          </div>
+
+          <!-- Feature 2 -->
+          <div class="feature-card">
+            <div class="feature-icon-box" style="background: #fef3c7; color: #d97706;">
+              📅
+            </div>
+            <h3 class="feature-title">Agenda Comercial "Mi Día"</h3>
+            <p class="feature-desc">
+              Foco radical en ejecución diaria: tareas vencidas, llamadas pendientes para hoy y citas de visita. Incluye modal de registro de actividad en 1-clic que exige programar la siguiente acción para erradicar cuentas huérfanas.
+            </p>
+          </div>
+
+          <!-- Feature 3 -->
+          <div class="feature-card">
+            <div class="feature-icon-box" style="background: #e0e7ff; color: #4f46e5;">
+              📧
+            </div>
+            <h3 class="feature-title">Mailing Multi-ESP Desacoplado</h3>
+            <p class="feature-desc">
+              Patrón Adapter con conectores para Mailchimp, Brevo, Resend y Sandbox local. Segmentación dinámica por etapa o volumen ERP, higiene RGPD inmediata ante Hard Bounces y Puente de Alta Intención (🔥).
+            </p>
+          </div>
+
+          <!-- Feature 4 -->
+          <div class="feature-card">
+            <div class="feature-icon-box" style="background: #d1fae5; color: #059669;">
+              🔄
+            </div>
+            <h3 class="feature-title">Integración ERP Híbrida</h3>
+            <p class="feature-desc">
+              Webhooks seguros para ingesta de pedidos desde SAP, Navision, Sage o bases SQL. Visor 360º con desglose de pedidos, líneas de producto, KPIs financieros (LTV, YTD) y sandbox para simular compras en caliente.
+            </p>
+          </div>
+
+          <!-- Feature 5 -->
+          <div class="feature-card">
+            <div class="feature-icon-box" style="background: #ffe4e6; color: #e11d48;">
+              🗂️
+            </div>
+            <h3 class="feature-title">Ficha Cajón 360º (Drawer)</h3>
+            <p class="feature-desc">
+              Panel deslizante sin recarga que reúne información societaria, jerarquía mayorista, oportunidades valoradas, histórico cronológico de interacciones y accesos rápidos para enriquecer con IA en 1-clic.
+            </p>
+          </div>
+
+          <!-- Feature 6 -->
+          <div class="feature-card">
+            <div class="feature-icon-box" style="background: #f3e8ff; color: #9333ea;">
+              🛡️
+            </div>
+            <h3 class="feature-title">Reciclaje de Cuentas Estancadas</h3>
+            <p class="feature-desc">
+              Detección automática de cuentas estancadas (>60 días sin actividad comercial en Potencial) para reciclarlas al pool común, garantizando que el pipeline refleje únicamente negociaciones vivas.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI BYOK Showcase Section -->
+    <section id="ia-byok" style="margin-bottom: 80px;">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-eyebrow">Inteligencia Artificial Pragmática</div>
+          <h2 class="section-title">Arquitectura IA BYOK (Bring Your Own Key)</h2>
+          <p class="section-subtitle">
+            Deshabilitada por defecto para total soberanía y privacidad RGPD. Conecta tus propias credenciales corporativas de Microsoft Azure OpenAI, Google Gemini, OpenAI o Claude a precio de coste de API.
+          </p>
+        </div>
+
+        <div class="ai-showcase-box">
+          <div class="ai-tabs-nav">
+            <button class="ai-tab-btn active" onclick="switchAITab(0)">🎙️ Voice-to-CRM (Notas de Audio)</button>
+            <button class="ai-tab-btn" onclick="switchAITab(1)">🔍 Enriquecedor de Cuentas</button>
+            <button class="ai-tab-btn" onclick="switchAITab(2)">📨 Clasificador de Intención de Email</button>
+            <button class="ai-tab-btn" onclick="switchAITab(3)">⚠️ Detector de Riesgo de Churn</button>
+            <button class="ai-tab-btn" onclick="switchAITab(4)">✍️ Generador de Copys de Mailing</button>
+          </div>
+
+          <!-- Tab 1: Voice to CRM -->
+          <div class="ai-tab-content active">
+            <div class="ai-prompt-response-grid">
+              <div>
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 8px;">
+                  Grabación Comercial al salir de la visita (Texto Transcrito):
+                </h4>
+                <div class="code-snippet-box">
+"Acabo de salir de ver a Marcos en Restaurante El Faro del Puerto. Me comenta que están renovando la zona de terraza y van a necesitar unos 15.000 € en mobiliario y cámaras frigoríficas. Quieren cerrar el presupuesto antes del día 20 del próximo mes. Me pide que le mande la ficha técnica y lo llame el martes a las 10:00."
+                </div>
+              </div>
+              <div>
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: #0284c7; margin-bottom: 8px;">
+                  Extracción Estructurada Directa en el CRM (JSON):
+                </h4>
+                <div class="code-snippet-box" style="color: #34d399;">
+{
+  "detected_need": "Renovación mobiliario y cámaras frigoríficas",
+  "estimated_amount": 15000.0,
+  "expected_close_date": "2026-12-20",
+  "next_followup_days": 4,
+  "followup_task": "Llamar a Marcos a las 10:00 y enviar ficha técnica",
+  "suggested_stage": "POTENCIAL",
+  "summary": "Visita positiva: proyecto cuantificado de renovación de terraza."
+}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 2: Enriquecedor -->
+          <div class="ai-tab-content">
+            <div class="ai-prompt-response-grid">
+              <div>
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 8px;">
+                  Datos iniciales del Lead:
+                </h4>
+                <div class="code-snippet-box">
+Empresa: "Mecanizados Ezkerraldea S.L."
+CIF: B98765432
+Ubicación: Barakaldo, Bizkaia
+Web: www.ezkerraldea-mecanizados.eus
+                </div>
+              </div>
+              <div>
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: #0284c7; margin-bottom: 8px;">
+                  Diagnóstico y Enriquecimiento IA:
+                </h4>
+                <div class="code-snippet-box" style="color: #34d399;">
+{
+  "industry_sector": "Mecanizado de precisión y decoletaje",
+  "target_icp_score": 92,
+  "estimated_employees": "25-50",
+  "recommended_distributor": "Suministros Industriales del Norte S.L.",
+  "talking_points": [
+    "Ahorro en utillaje para tornos CNC de 5 ejes",
+    "Garantía de entrega en 24h para Bizkaia y Cantabria"
+  ]
+}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 3: Intent Detection -->
+          <div class="ai-tab-content">
+            <div class="ai-prompt-response-grid">
+              <div>
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 8px;">
+                  Email Inbound recibido de cliente:
+                </h4>
+                <div class="code-snippet-box">
+"Buenos días. Hemos recibido vuestro catálogo de automatismos pero no vemos los precios para pedidos superiores a 10 unidades. ¿Podríais remitirnos una tarifa para distribuidores o concertar una videollamada?"
+                </div>
+              </div>
+              <div>
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: #0284c7; margin-bottom: 8px;">
+                  Clasificación y Tarea Prioritaria:
+                </h4>
+                <div class="code-snippet-box" style="color: #34d399;">
+{
+  "intent": "SOLICITUD_PRESUPUESTO_VOLUMEN",
+  "urgency": "ALTA",
+  "sentiment": "POSITIVO_INTERESADO",
+  "recommended_action": "Programar videollamada y enviar escalado de precios",
+  "trigger_task": {
+    "title": "Contactar para llamada técnica y descuento por volumen",
+    "priority": "HIGH_INTENT"
+  }
+}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 4: Churn Detection -->
+          <div class="ai-tab-content">
+            <div class="ai-prompt-response-grid">
+              <div>
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 8px;">
+                  Patrón de consumo en ERP analizado:
+                </h4>
+                <div class="code-snippet-box">
+Cliente: "Cafetería y Restaurante El Puerto"
+Frecuencia histórica: 1 pedido cada 14 días (media 1.800 €)
+Último pedido: hace 68 días
+Consumo YTD: -42% respecto al año anterior
+                </div>
+              </div>
+              <div>
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: #0284c7; margin-bottom: 8px;">
+                  Alerta Proactiva de Retención:
+                </h4>
+                <div class="code-snippet-box" style="color: #f87171;">
+{
+  "churn_risk_level": "CRÍTICO",
+  "probable_cause": "Posible fuga a competidor local o cierre temporal",
+  "preventive_task": "Visita comercial presencial inmediata del comercial de zona",
+  "task_priority": "CHURN_ALERT"
+}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 5: Campaign Copy -->
+          <div class="ai-tab-content">
+            <div class="ai-prompt-response-grid">
+              <div>
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 8px;">
+                  Briefing de Campaña de Mailing:
+                </h4>
+                <div class="code-snippet-box">
+Audiencia: Clientes Finales de Hostelería
+Objetivo: Presentación de la nueva gama de hornos de brasas
+Tono: Profesional, directo, centrado en reducción de consumo energético
+                </div>
+              </div>
+              <div>
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: #0284c7; margin-bottom: 8px;">
+                  Asunto y Copy optimizado para conversión:
+                </h4>
+                <div class="code-snippet-box" style="color: #34d399;">
+Asunto: "{{empresa}}: Reduzca un 35% el gasto en cocina este trimestre"
+Cuerpo: "Hola {{nombre}}, sabemos que la eficiencia en hora punta marca el margen de {{empresa}}. Le invitamos a conocer la gama de hornos certificados suministrados a través de su distribuidor oficial..."
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" style="margin-bottom: 80px;">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-eyebrow">Preguntas Frecuentes</div>
+          <h2 class="section-title">Dudas Comunes sobre Nexus CRM</h2>
+          <p class="section-subtitle">
+            Todo lo que necesitas saber antes de clonar, probar o desplegar la solución.
+          </p>
+        </div>
+
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3 class="faq-question"><span>❓</span> ¿Por qué un clic en newsletter no convierte un Lead en Potencial?</h3>
+            <p class="faq-answer">
+              Por diseño inquebrantable de la regla de oro del negocio. Las aperturas y clics en marketing sufren de bots de ciberseguridad y clics accidentales. En Nexus CRM, un clic en "Solicitar Tarifa" crea una Tarea Prioritaria en "Mi Día" para el comercial; la cuenta solo se promueve cuando el comercial realiza y anota el contacto humano efectivo.
+            </p>
+          </div>
+
+          <div class="faq-item">
+            <h3 class="faq-question"><span>❓</span> ¿Cómo se garantiza la privacidad con los modelos de IA?</h3>
+            <p class="faq-answer">
+              Adoptamos la filosofía BYOK (Bring Your Own Key). Por defecto el módulo está en OFF sin dependencias externas. Si utilizas Microsoft Azure OpenAI, las llamadas operan dentro del tenant corporativo privado de tu organización cumpliendo estrictamente el RGPD sin que los datos se usen para entrenar modelos públicos.
+            </p>
+          </div>
+
+          <div class="faq-item">
+            <h3 class="faq-question"><span>❓</span> ¿Puedo sincronizar mi ERP actual (SAP, Sage, Navision)?</h3>
+            <p class="faq-answer">
+              Sí. Nexus CRM expone endpoints seguros de Webhook protegidos por cabecera de autenticación (<code style="font-family: monospace; background: #f1f5f9; padding: 2px 4px; border-radius: 4px;">X-API-Key: nexus_webhook_secret_key_2026</code>). Cualquier ERP o middleware puede enviar pedidos y facturas en formato JSON para actualizar automáticamente el estado del cliente y la caché de pedidos.
+            </p>
+          </div>
+
+          <div class="faq-item">
+            <h3 class="faq-question"><span>❓</span> ¿Qué base de datos utiliza y cómo escala?</h3>
+            <p class="faq-answer">
+              Por defecto incluye SQLite3 configurado en modo WAL (Write-Ahead Logging) y claves foráneas activas, ideal para despliegues autónomos en Windows. Gracias al uso estricto de SQLAlchemy 2.0, basta con modificar la variable DATABASE_URL en el archivo .env para migrar instantáneamente a PostgreSQL en entornos distribuidos.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="brand-logo" style="margin-bottom: 14px;">
+            <div class="brand-icon">N</div>
+            <span class="brand-title">Nexus CRM</span>
+          </div>
+          <p style="max-width: 400px; line-height: 1.6; margin-bottom: 16px;">
+            Plataforma comercial B2B con máquina de estados determinista, jerarquía mayorista de 2 niveles, integración ERP y arquitectura IA BYOK.
+          </p>
+          <p>© 2026 Nexus CRM. Todos los derechos reservados.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Documentación Técnica</h4>
+          <ul>
+            <li><a href="https://github.com/joangranell/Nexus-CRM/blob/public/Documentacion/PLAN_MAESTRO_NEXUS_CRM.md" target="_blank">Plan Maestro Técnico</a></li>
+            <li><a href="https://github.com/joangranell/Nexus-CRM/blob/public/Documentacion/PROMPT_CREACION_NEXUS_CRM.md" target="_blank">Prompt de Recreación Integral</a></li>
+            <li><a href="https://github.com/joangranell/Nexus-CRM/blob/public/Documentacion/prospecto%20y%20jerarquia%20cliente.md" target="_blank">Jerarquía Distribuidor vs Cliente Final</a></li>
+            <li><a href="https://github.com/joangranell/Nexus-CRM" target="_blank">Código Fuente en GitHub</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Navegación</h4>
+          <ul>
+            <li><a href="#problema">Por qué Nexus CRM</a></li>
+            <li><a href="#simulador">Simulador en Vivo</a></li>
+            <li><a href="#jerarquia">Jerarquía Mayorista</a></li>
+            <li><a href="#ia-byok">Asistente IA BYOK</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Simulation Logic Script -->
+  <script>
+    const state = {
+      stage: 'LEAD',
+      subStatus: 'SIN_CONTACTAR',
+      owner: null,
+      callAttempts: 0,
+      opportunityAmount: 0,
+      erpSales: 0,
+      tasksCount: 0
+    };
+
+    function logConsole(eventType, message, rule) {
+      const consoleBox = document.getElementById('sim-console');
+      const now = new Date();
+      const timeStr = now.toTimeString().split(' ')[0];
+      
+      const line = document.createElement('div');
+      line.className = 'console-line';
+      line.innerHTML = `
+        <span class="console-timestamp">[${timeStr}]</span> 
+        <span class="console-event">${eventType}:</span> ${message}
+        ${rule ? `<br/><span class="console-rule">↳ Regla aplicada: ${rule}</span>` : ''}
+      `;
+      consoleBox.appendChild(line);
+      consoleBox.scrollTop = consoleBox.scrollHeight;
+    }
+
+    function updateSimUI() {
+      // Badges & Fields
+      const badgeStage = document.getElementById('badge-stage');
+      badgeStage.innerText = state.stage;
+
+      const subStatusElem = document.getElementById('field-substatus');
+      subStatusElem.innerText = state.subStatus;
+
+      const ownerElem = document.getElementById('field-owner');
+      ownerElem.innerText = state.owner ? state.owner : 'Bolsa Común (Sin Asignar)';
+      ownerElem.style.color = state.owner ? '#059669' : 'var(--text-subtle)';
+
+      const oppElem = document.getElementById('field-opp');
+      oppElem.innerText = state.opportunityAmount > 0 
+        ? state.opportunityAmount.toLocaleString('es-ES', { minimumFractionDigits: 2 }) + ' € (En Forecast)'
+        : '0.00 € (No cuantificada)';
+      oppElem.style.color = state.opportunityAmount > 0 ? '#0284c7' : 'var(--text-subtle)';
+
+      const erpElem = document.getElementById('field-erp');
+      erpElem.innerText = state.erpSales > 0
+        ? state.erpSales.toLocaleString('es-ES', { minimumFractionDigits: 2 }) + ' € (Primer Pedido Confirmado)'
+        : '0.00 € (Sin pedidos firmes)';
+      erpElem.style.color = state.erpSales > 0 ? '#059669' : 'var(--text-subtle)';
+
+      // Colors for stage badge
+      badgeStage.className = 'badge-sim ' + (
+        state.stage === 'LEAD' ? 'badge-blue' :
+        state.stage === 'PROSPECTO' ? 'badge-indigo' :
+        state.stage === 'POTENCIAL' ? 'badge-amber' : 'badge-emerald'
+      );
+
+      // Pipeline Nodes
+      const steps = ['lead', 'prospecto', 'potencial', 'cliente'];
+      const currentIdx = steps.indexOf(state.stage.toLowerCase());
+      
+      steps.forEach((s, idx) => {
+        const node = document.getElementById('node-' + s);
+        if (idx < currentIdx) {
+          node.className = 'sim-step completed';
+        } else if (idx === currentIdx) {
+          node.className = 'sim-step active';
+        } else {
+          node.className = 'sim-step';
+        }
+      });
+    }
+
+    function actionCallNoAnswer() {
+      if (state.stage !== 'LEAD') {
+        logConsole('AVISO', 'La cuenta ya superó la fase de LEAD inicial. La llamada no contestada se anota en el timeline.');
+        return;
+      }
+      state.callAttempts += 1;
+      state.subStatus = state.callAttempts === 1 ? 'INTENTO_1' : 'INTENTO_2';
+      logConsole('INTENTO FALLIDO', `Llamada no contestada (#${state.callAttempts}).`, 'El Lead NO cambia de etapa pero registra trazabilidad del intento.');
+      updateSimUI();
+    }
+
+    function actionEffectiveContact() {
+      if (state.stage === 'LEAD') {
+        state.stage = 'PROSPECTO';
+        state.subStatus = 'CONTACTADO_CUALIFICANDO';
+        state.owner = 'Carlos Gómez (Comercial Asignado)';
+        state.tasksCount += 1;
+        logConsole('CONTACTO EFECTIVO', 'Llamada comercial mantenida con el decisor (Ramón Albalat).', 'Transición automática LEAD ➔ PROSPECTO. Asignación inmediata de Comercial y Tarea en Mi Día.');
+      } else {
+        logConsole('SEGUIMIENTO', 'Nueva reunión/contacto efectivo registrado en el timeline de la cuenta.');
+      }
+      updateSimUI();
+    }
+
+    function actionCreateOpportunity() {
+      if (state.stage === 'LEAD') {
+        logConsole('SALVAGUARDA DE FORECASTING', 'Imposible crear Potencial directo desde Lead sin cualificación previa.', 'Debe registrarse contacto efectivo antes de imputar previsiones.');
+        return;
+      }
+      state.stage = 'POTENCIAL';
+      state.opportunityAmount = 22000.0;
+      state.subStatus = 'EN_NEGOCIACION';
+      logConsole('OPORTUNIDAD CUANTIFICADA', 'Negociación formal creada por 22.000,00 € con fecha prevista de cierre.', 'Transición PROSPECTO ➔ POTENCIAL. La cifra computa oficialmente en el pipeline de ventas.');
+      updateSimUI();
+    }
+
+    function actionHighIntentClick() {
+      state.tasksCount += 1;
+      logConsole('ALTA INTENCIÓN (🔥)', 'El destinatario hizo clic en enlace "Solicitar Tarifa Técnica".', 'REGLA DE ORO: No promueve automáticamente la cuenta. Genera una Tarea URGENTE en "Mi Día" para el comercial.');
+      updateSimUI();
+    }
+
+    function actionErpOrder() {
+      state.stage = 'CLIENTE';
+      state.erpSales = 14200.0;
+      state.subStatus = 'ACTIVO_CON_PEDIDO';
+      logConsole('SINCRONIZACIÓN ERP', 'Webhook entrante de ERP: Pedido #ORD-2026-9901 FACTURADO (14.200,00 €).', 'CONVERSIÓN EXCLUSIVA: La cuenta pasa a CLIENTE únicamente cuando el ERP confirma el pedido.');
+      updateSimUI();
+    }
+
+    function resetSimulation() {
+      state.stage = 'LEAD';
+      state.subStatus = 'SIN_CONTACTAR';
+      state.owner = null;
+      state.callAttempts = 0;
+      state.opportunityAmount = 0;
+      state.erpSales = 0;
+      state.tasksCount = 0;
+      
+      const consoleBox = document.getElementById('sim-console');
+      consoleBox.innerHTML = `
+        <div class="console-line">
+          <span class="console-timestamp">[00:00:00]</span> 
+          <span class="console-event">SIMULADOR REINICIADO:</span> Cuenta restablecida a LEAD / SIN_CONTACTAR.
+        </div>
+      `;
+      updateSimUI();
+    }
+
+    // AI Tabs Switcher
+    function switchAITab(index) {
+      const buttons = document.querySelectorAll('.ai-tab-btn');
+      const tabs = document.querySelectorAll('.ai-tab-content');
+      
+      buttons.forEach((btn, i) => {
+        if (i === index) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+
+      tabs.forEach((tab, i) => {
+        if (i === index) tab.classList.add('active');
+        else tab.classList.remove('active');
+      });
+    }
+
+    // Initialize UI on load
+    updateSimUI();
+  </script>
+</body>
+</html>

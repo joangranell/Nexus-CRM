@@ -1,0 +1,275 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   Nexus CRM · Sistema de diseño inspirado en Salesforce Lightning (SLDS)
+   ========================================================================== */
+
+@layer base {
+  html,
+  body {
+    @apply bg-sf-bg text-sf-text;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  * {
+    border-color: #e5e5e5;
+  }
+
+  :focus-visible {
+    outline: none;
+    box-shadow: 0 0 3px #0176d3;
+  }
+
+  ::selection {
+    background: #d8e6fe;
+    color: #181818;
+  }
+}
+
+@layer components {
+  /* ---------- Fondo de aplicación con banda azul superior (Lightning) ---------- */
+  .app-backdrop {
+    background:
+      linear-gradient(180deg, #cfe9fe 0px, #e8f2fc 140px, #f3f3f3 260px) no-repeat,
+      #f3f3f3;
+  }
+
+  /* ---------- Tarjetas ---------- */
+  .card {
+    @apply bg-white border border-sf-border rounded-sf shadow-card;
+  }
+  .card-header {
+    @apply flex items-center justify-between gap-3 px-4 pt-3 pb-2;
+  }
+  .card-title {
+    @apply text-sm font-bold text-sf-text flex items-center gap-2;
+  }
+  .card-body {
+    @apply px-4 pb-4;
+  }
+  .card-footer {
+    @apply border-t border-sf-border px-4 py-2.5 text-center text-xs;
+  }
+
+  /* ---------- Botones ---------- */
+  .btn {
+    @apply inline-flex items-center justify-center gap-1.5 h-8 px-4 rounded-sf border text-[13px] font-normal
+      leading-none whitespace-nowrap transition-colors duration-100 select-none
+      disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-neutral {
+    @apply btn bg-white border-sf-border-strong text-sf-brand hover:bg-[#f3f3f3] active:bg-[#eef4ff];
+  }
+  .btn-brand {
+    @apply btn bg-sf-brand border-sf-brand text-white hover:bg-sf-brand-dark hover:border-sf-brand-dark;
+  }
+  .btn-destructive {
+    @apply btn bg-sf-error border-sf-error text-white hover:bg-[#8e030f] hover:border-[#8e030f];
+  }
+  .btn-success {
+    @apply btn bg-sf-success border-sf-success text-white hover:bg-[#22683e];
+  }
+  .btn-sm {
+    @apply h-7 px-3 text-xs;
+  }
+  .btn-icon {
+    @apply inline-flex items-center justify-center w-8 h-8 rounded-sf border border-sf-border-strong bg-white text-sf-text-weaker
+      hover:bg-[#f3f3f3] hover:text-sf-brand transition-colors duration-100;
+  }
+  .btn-icon-bare {
+    @apply inline-flex items-center justify-center w-8 h-8 rounded-sf text-sf-text-weaker hover:bg-[#f3f3f3] hover:text-sf-brand transition-colors;
+  }
+  .btn-icon.is-selected {
+    @apply bg-sf-brand border-sf-brand text-white hover:bg-sf-brand-dark hover:text-white;
+  }
+  .btn-group {
+    @apply inline-flex;
+  }
+  .btn-group > * {
+    @apply rounded-none -ml-px first:ml-0 first:rounded-l-sf last:rounded-r-sf;
+  }
+  .link {
+    @apply text-sf-brand hover:text-sf-brand-dark hover:underline cursor-pointer;
+  }
+
+  /* ---------- Formularios ---------- */
+  .form-label {
+    @apply block text-xs text-sf-text-weak mb-0.5;
+  }
+  .form-label .req {
+    @apply text-sf-error mr-0.5;
+  }
+  .input,
+  .select,
+  .textarea {
+    @apply w-full bg-white border border-sf-border-strong rounded-sf px-3 text-[13px] text-sf-text
+      placeholder:text-sf-text-weaker transition-shadow duration-100
+      focus:outline-none focus:border-sf-brand focus:shadow-focus;
+  }
+  .input,
+  .select {
+    @apply h-8;
+  }
+  .textarea {
+    @apply py-2 leading-snug resize-y;
+  }
+  .select {
+    @apply pr-8 appearance-none bg-no-repeat;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23747474' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-position: right 0.6rem center;
+  }
+  .checkbox {
+    @apply w-4 h-4 cursor-pointer accent-[#0176d3];
+  }
+
+  /* ---------- Badges / pills ---------- */
+  .badge {
+    @apply inline-flex items-center gap-1 h-5 px-2 rounded-[0.9rem] text-[11px] font-bold uppercase tracking-[0.02em]
+      bg-[#ecebea] text-sf-text-weak whitespace-nowrap;
+  }
+  .badge-lightest {
+    @apply badge bg-white border border-sf-border;
+  }
+
+  /* ---------- Cabecera de página ---------- */
+  .page-header {
+    @apply card px-4 py-3;
+  }
+  .page-header-eyebrow {
+    @apply text-xs text-sf-text-weak leading-tight;
+  }
+  .page-header-title {
+    @apply text-lg font-bold text-sf-text leading-tight;
+  }
+  .page-header-meta {
+    @apply text-xs text-sf-text-weak;
+  }
+
+  /* ---------- Tablas de datos ---------- */
+  .data-table {
+    @apply w-full text-left text-[13px] border-collapse;
+  }
+  .data-table thead th {
+    @apply bg-[#f3f3f3] text-xs font-bold text-sf-text-weak h-8 px-2 border-b border-sf-border whitespace-nowrap select-none;
+  }
+  .data-table thead th + th {
+    @apply border-l border-sf-border;
+  }
+  .data-table tbody td {
+    @apply px-2 h-9 border-b border-sf-border align-middle;
+  }
+  .data-table tbody tr {
+    @apply transition-colors duration-75;
+  }
+  .data-table tbody tr:hover td {
+    @apply bg-[#f3f3f3];
+  }
+
+  /* ---------- Path (barra de etapas en chevron) ---------- */
+  .path {
+    @apply flex w-full items-stretch gap-0.5;
+  }
+  .path-item {
+    @apply relative flex-1 flex items-center justify-center h-8 text-[13px] text-sf-text bg-[#ecebea] cursor-default;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%, 12px 50%);
+  }
+  .path-item:first-child {
+    @apply rounded-l-[1rem];
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%);
+  }
+  .path-item:last-child {
+    @apply rounded-r-[1rem];
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 12px 50%);
+  }
+  .path-item.is-complete {
+    @apply bg-[#3ba755] text-white;
+  }
+  .path-item.is-current {
+    @apply bg-sf-brand-darker text-white font-bold;
+  }
+  .path-item.is-lost {
+    @apply bg-sf-error text-white font-bold;
+  }
+
+  /* ---------- Notificaciones contextuales ---------- */
+  .notify {
+    @apply flex items-start gap-3 rounded-sf border px-3 py-2.5 text-[13px];
+  }
+  .notify-info {
+    @apply notify bg-sf-brand-50 border-[#aacbff] text-sf-text;
+  }
+  .notify-success {
+    @apply notify bg-sf-success-bg border-[#91db8b] text-sf-text;
+  }
+  .notify-warning {
+    @apply notify bg-sf-warning-bg border-[#fcc003] text-sf-text;
+  }
+  .notify-error {
+    @apply notify bg-sf-error-bg border-[#fe9ea2] text-sf-text;
+  }
+
+  /* ---------- Pestañas con alcance (record tabs) ---------- */
+  .tabs {
+    @apply flex border-b border-sf-border gap-6;
+  }
+  .tab {
+    @apply relative -mb-px py-2.5 text-[13px] text-sf-text-weak hover:text-sf-brand border-b-[3px] border-transparent transition-colors;
+  }
+  .tab.is-active {
+    @apply text-sf-text font-bold border-sf-brand;
+  }
+
+  /* ---------- Campo de formulario de solo lectura ---------- */
+  .field {
+    @apply border-b border-sf-border pb-1.5;
+  }
+  .field-label {
+    @apply text-xs text-sf-text-weak;
+  }
+  .field-value {
+    @apply text-[13px] text-sf-text min-h-[20px] break-words;
+  }
+
+  /* ---------- Modal ---------- */
+  .modal-backdrop {
+    @apply fixed inset-0 z-50 bg-[rgba(8,7,7,0.55)] animate-fade-in;
+  }
+  .modal-container {
+    @apply relative mx-auto my-12 w-full bg-white rounded-sf shadow-modal flex flex-col max-h-[calc(100vh-6rem)] animate-modal-in;
+  }
+  .modal-header {
+    @apply relative px-6 py-4 border-b-2 border-sf-border text-center rounded-t-sf;
+  }
+  .modal-footer {
+    @apply px-6 py-3 bg-[#f3f3f3] border-t-2 border-sf-border flex items-center justify-end gap-2 rounded-b-sf;
+  }
+  .modal-close {
+    @apply absolute -top-10 right-0 w-8 h-8 rounded-sf bg-white text-sf-text-weaker flex items-center justify-center
+      hover:text-sf-brand shadow-card;
+  }
+
+  /* ---------- Section titles ---------- */
+  .section-title {
+    @apply flex items-center gap-2 px-3 h-8 rounded-sf bg-[#f3f3f3] text-sm font-normal text-sf-text;
+  }
+}
+
+/* ---------- Scrollbars discretas ---------- */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #c9c9c9;
+  border-radius: 9999px;
+  border: 2px solid #f3f3f3;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0;
+}

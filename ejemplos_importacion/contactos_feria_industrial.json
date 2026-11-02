@@ -1,0 +1,29 @@
+[
+  {
+    "empresa": "Siderúrgica del Deva S.A.",
+    "contacto": "Gonzalo Pardo",
+    "cif": "A39778899",
+    "email": "gpardo@siderurgicadeva.com",
+    "telefono": "699001122",
+    "origen": "STAND_FERIA_BILBAO",
+    "comentarios": "Contacto tomado en el stand. Muy interesados en demostración presencial."
+  },
+  {
+    "empresa": "Montajes Eléctricos y Control S.L.",
+    "contacto": "Patricia Vía",
+    "cif": "B39332211",
+    "email": "pvia@montajescontrol.es",
+    "telefono": "+34 942 33 44 55",
+    "origen": "STAND_FERIA_BILBAO",
+    "comentarios": "Presupuesto de cuadros eléctricos para planta química."
+  },
+  {
+    "empresa": "Mecanizados Precisión Santander S.L.",
+    "contacto": "Javier Gómez",
+    "cif": "B39998877",
+    "email": "jgomez@mecanizadosps.es",
+    "telefono": "942998877",
+    "origen": "STAND_FERIA_BILBAO",
+    "comentarios": "Necesitan catálogo técnico de acoplamientos."
+  }
+]
